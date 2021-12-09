@@ -37,3 +37,10 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  test:
+    runs-on: ubuntu-latest
+    container: docker://ghostcat404/ml_app:latest
+    steps:
+      - name: Test docker image
+        run: python3.9
