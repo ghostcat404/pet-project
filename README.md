@@ -1,7 +1,7 @@
 # My awesome project
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![pipeline status](https://gitlab.com/DataCat/ml-project/badges/main/pipeline.svg)](https://)
+[![Build](https://github.com/ghostcat404/pet-project/actions/workflows/github-actions-demo.yml/badge.svg)](https://github.com/ghostcat404/pet-project/actions/workflows/github-actions-demo.yml)
 [![coverage report](https://gitlab.com/DataCat/ml-project/badges/main/coverage.svg)](https://)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
