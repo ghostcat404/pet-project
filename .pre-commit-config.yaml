@@ -25,7 +25,3 @@ repos:
   hooks:
     - id: doctoc
       types: [markdown]
-- repo: https://github.com/petalmd/dockerfile-pre-commit
-  rev: 'v1.0'  # Use the revision rev you want to point at
-  hooks:
-  - id: dockerlint
