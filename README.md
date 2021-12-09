@@ -1,8 +1,6 @@
 # My awesome project
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![pipeline status](https://gitlab.com/DataCat/ml-project/badges/main/pipeline.svg)](https://gitlab.com/DataCat/ml-project/-/commits/main)
-[![coverage report](https://gitlab.com/DataCat/ml-project/badges/main/coverage.svg)](https://gitlab.com/DataCat/ml-project/-/commits/main)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
