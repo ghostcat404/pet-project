@@ -1,4 +1,3 @@
-#TODO: add docker build actions
 name: Demo
 on: [push]
 jobs:
@@ -44,4 +43,4 @@ jobs:
     container: docker://ghostcat404/ml_app:latest
     steps:
       - name: Test docker image
-        run: poetry
+        run: echo "Hello from docker"
