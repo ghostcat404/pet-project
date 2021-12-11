@@ -3,21 +3,6 @@
   vars_files:
       - ./vars.yml
   tasks:
-    - name: Add users
-      user:
-        name: "{{ item.name }}"
-        groups: "{{ item.groups }}"
-        shell: "{{ item.shell }}"
-        password: "{{ lookup('password', 'credentials/' + item.name + '/password.txt encrypt=md5_crypt') }}"
-        state: present
-      with_items: "{{ users.values() | list }}"
-
-    - name: Update and upgrade apt packages
-      apt:
-        upgrade: yes
-        update_cache: yes
-        cache_valid_time: 86400 #One day%
-
     - name: Install docker
       apt:
         name: docker.io
@@ -27,15 +12,17 @@
     - name: Restart docker
       shell: systemctl restart docker
 
-    - name: Add users in docker group
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 #One day%
+
+    - name: Add users
       user:
         name: "{{ item.name }}"
-        groups: [docker]
-        append: yes
+        groups: "{{ item.groups }}"
+        shell: "{{ item.shell }}"
+        password: "{{ lookup('password', 'credentials/' + item.name + '/password.txt encrypt=md5_crypt') }}"
         state: present
       with_items: "{{ users.values() | list }}"
-
-- hosts: localhost
-  tasks:
-    - name: Run email sending
-      command: python3 ./scripts/email_push.py
