@@ -38,4 +38,4 @@
 - hosts: localhost
   tasks:
     - name: Run email sending
-      command: python3 ./scripts/test.py
+      command: python3 ./scripts/email_push.py

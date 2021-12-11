@@ -1,5 +1,7 @@
-# - hosts: all
-#   become: yes
-#   vars_files:
-#       - ./vars.yml
-#   tasks:
+# TODO: create certs
+- hosts: master
+  become: yes
+  vars_files:
+      - ./vars.yml
+  tasks:
+    - name: Create docker registry
