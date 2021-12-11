@@ -9,16 +9,33 @@
         groups: "{{ item.groups }}"
         shell: "{{ item.shell }}"
         password: "{{ lookup('password', 'credentials/' + item.name + '/password.txt encrypt=md5_crypt') }}"
-        generate_ssh_key: yes
-        ssh_key_type: rsa
-        ssh_key_bits: 4096
-        ssh_key_file: .ssh/{{ item.ssh_key_filename + '_' + item.name }}
         state: present
-      with_items: "{{ user_details }}"
+      with_items: "{{ users.values() | list }}"
 
     - name: Update and upgrade apt packages
       apt:
         upgrade: yes
         update_cache: yes
         cache_valid_time: 86400 #One day%
-      with_items: "{{ user_details }}"
+
+    - name: Install docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Restart docker
+      shell: systemctl restart docker
+
+    - name: Add users in docker group
+      user:
+        name: "{{ item.name }}"
+        groups: [docker]
+        append: yes
+        state: present
+      with_items: "{{ users.values() | list }}"
+
+- hosts: localhost
+  tasks:
+    - name: Run email sending
+      command: python3 ./scripts/test.py
