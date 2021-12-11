@@ -1,4 +1,5 @@
 # TODO: create certs
+# TODO: add registry deploy and configure
 - hosts: master
   become: yes
   vars_files:
