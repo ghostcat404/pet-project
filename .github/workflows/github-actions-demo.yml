@@ -46,7 +46,7 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
-    container: docker://ghoscat404/ml_app:latest
+    container: docker://ghostcat404/ml_app:latest
     steps:
       - name: Test docker image
         run: echo "Test from docker"
