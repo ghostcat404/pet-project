@@ -5,4 +5,10 @@
   vars_files:
       - ./vars.yml
   tasks:
-    - name: Create docker registry
+    - name: Install certbot
+      community.general.snap:
+        name: certbot
+        classic: yes
+
+    - name: create symlink
+      shell: ln -s /snap/bin/certbot /usr/bin/certbot
