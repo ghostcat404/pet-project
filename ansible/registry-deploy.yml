@@ -10,5 +10,81 @@
         name: certbot
         classic: yes
 
-    - name: create symlink
-      shell: ln -s /snap/bin/certbot /usr/bin/certbot
+    - name: Create directory for domain
+      file:
+        path: /var/www/{{ nginx.domain }}/html
+        state: directory
+
+    - name: Copy default html
+      copy:
+        dest: /var/www/{{ nginx.domain }}/html/index.html
+        src: ./nginx/index.html
+
+    - name: Copy server config
+      copy:
+        dest: /etc/nginx/sites-available/{{ nginx.domain }}
+        src: ./nginx/domain_conf
+
+    - name: Create symlink
+      file:
+        src: /etc/nginx/sites-available/{{ nginx.domain }}
+        dest: /etc/nginx/sites-enabled/{{ nginx.domain }}
+        state: link
+
+    - name: Copy nginx.conf
+      copy:
+        dest: /etc/nginx/nginx.conf
+        src: ./nginx/nginx.conf
+
+    - name: Restart nginx
+      shell: systemctl restart nginx
+
+    - name: Allow nginx in ufw
+      community.general.ufw:
+        rule: allow
+        name: Nginx Full
+
+    - name: Get certs
+      shell: certbot --nginx -d awesomeproject.ru -d www.awesomeproject.ru -m "{{ users.main[0].email }}" --non-interactive --agree-tos
+
+    - name: Autoupdate certs on
+      shell: certbot renew --dry-run
+
+    - name: Create registry directory
+      file:
+        path: "{{ registry.registry_path }}"
+        state: directory
+
+    - name: Create data directory
+      file:
+        path: "{{ registry.registry_path }}/data"
+        state: directory
+
+    - name: Copy docker-compose registry
+      copy:
+        dest: "{{ registry.registry_path }}/docker-compose.yml"
+        src: ./registry/docker-compose.yml
+
+    - name: Install docker-compose
+      shell: |
+        if ! [ -f /usr/local/bin/docker-compose ]; then curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; fi
+        if ! [ -f /usr/local/bin/docker-compose ]; then chmod +x /usr/local/bin/docker-compose; fi
+        if ! [ -f /usr/bin/docker-compose ]; then ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose; fi
+
+    - name: Run registry
+      shell: |
+        cd docker-registry && docker-compose up -d
+
+    - name: Install htpasswd
+      apt:
+        name: apache2-utils
+        state: present
+
+    - name: Create auth directory
+      file:
+        path: "{{ registry.registry_path }}/auth"
+        state: directory
+
+    - name: Create registry user
+      shell: |
+        if ! [ -f {{ registry.registry_path }}/auth/registry.password ]; then htpasswd -bBc {{ registry.registry_path }}/auth/registry.password {{ registry.user.name }} {{ registry.user.password }}; fi
